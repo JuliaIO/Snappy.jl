@@ -2,7 +2,8 @@ module Snappy
 
 export compress, uncompress
 
-const libsnappy = "/usr/local/lib/libsnappy.dylib"
+using BinDeps
+@BinDeps.load_dependencies
 
 # snappy status
 const SnappyOK = 0
@@ -13,7 +14,7 @@ function snappy_compress(input::Array{Uint8}, compressed::Array{Uint8})
     ilen = length(input)
     olen = Csize_t[length(compressed)]
     status = ccall(
-        (:snappy_compress, libsnappy),
+        (:snappy_compress, :libsnappy),
         Int,
         (Ptr{Uint8}, Csize_t, Ptr{Uint8}, Ptr{Csize_t}),
         input, ilen, compressed, olen
@@ -25,7 +26,7 @@ function snappy_uncompress(compressed::Array{Uint8}, uncompressed::Array{Uint8})
     ilen = length(compressed)
     olen = Csize_t[length(uncompressed)]
     status = ccall(
-        (:snappy_uncompress, libsnappy),
+        (:snappy_uncompress, :libsnappy),
         Int,
         (Ptr{Uint8}, Csize_t, Ptr{Uint8}, Ptr{Csize_t}),
         compressed, ilen, uncompressed, olen
@@ -34,19 +35,19 @@ function snappy_uncompress(compressed::Array{Uint8}, uncompressed::Array{Uint8})
 end
 
 function snappy_max_compressed_length(source_length::Uint)
-    ccall((:snappy_max_compressed_length, libsnappy), Csize_t, (Csize_t,), source_length)
+    ccall((:snappy_max_compressed_length, :libsnappy), Csize_t, (Csize_t,), source_length)
 end
 
 function snappy_uncompressed_length(compressed::Array{Uint8})
     len = length(compressed)
     result = Csize_t[0]
-    status = ccall((:snappy_uncompressed_length, libsnappy), Int, (Ptr{Uint8}, Csize_t, Ptr{Csize_t}), compressed, len, result)
+    status = ccall((:snappy_uncompressed_length, :libsnappy), Int, (Ptr{Uint8}, Csize_t, Ptr{Csize_t}), compressed, len, result)
     result[1], status
 end
 
 function snappy_validate_compressed_buffer(compressed::Array{Uint8})
     ilen = length(compressed)
-    ccall((:snappy_validate_compressed_buffer, libsnappy), Int, (Ptr{Uint8}, Csize_t), compressed, ilen)
+    ccall((:snappy_validate_compressed_buffer, :libsnappy), Int, (Ptr{Uint8}, Csize_t), compressed, ilen)
 end
 
 # High-level Interfaces

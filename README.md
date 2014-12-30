@@ -25,4 +25,5 @@ If you digg into the module, you will find the following lower-level functions:
 * `snappy_uncompressed_length(compressed::Array{Uint8}) -> (length, status)`.
 * `snappy_validate_compressed_buffer(compressed::Array{Uint8}) -> status`
 
-These functions have one-to-one correspondance to the C-APIs and are very thin wrappers of them, so you can consult the "snappy-c.h" header file for the documentation. Moreover, even though these functions are not exported by default, you can think that they are stable as long as the original C-APIs are stable.
+These functions have one-to-one correspondance to the C-APIs and are very thin wrappers of them, so you can consult the "snappy-c.h" header file for the documentation.
+Moreover, even though these functions are not exported by default, you can think that they are stable as long as the original C-APIs are stable.
