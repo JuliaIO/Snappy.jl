@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/bicycle1885/Snappy.jl.svg?branch=master)](https://travis-ci.org/bicycle1885/Snappy.jl)
 
-[Snappy.jl](https://github.com/bicycle1885/Snappy.jl) is a Julia wrapper for the [snappy](https://code.google.com/p/snappy/) library - a compression/decompression library focused on speed.
+[Snappy.jl](https://github.com/bicycle1885/Snappy.jl) is a Julia wrapper for the [snappy](https://code.google.com/p/snappy/) library - a compression/decompression library focusing on speed.
 
 
 ## High-level Interfaces
