@@ -27,3 +27,8 @@ If you digg into the module, you will find the following lower-level functions:
 
 These functions have one-to-one correspondance to the C-APIs and are very thin wrappers of them, so you can consult the "snappy-c.h" header file for the documentation.
 Moreover, even though these functions are not exported by default, you can assume that they are stable as long as the original C-APIs are stable.
+
+
+## Requirements
+
+At the current moment, the snappy library itself should be installed in advance except Mac OS X (if you are using Homebrew) and should be located where [BinDeps.jl](https://github.com/JuliaLang/BinDeps.jl) can find it automatically.
