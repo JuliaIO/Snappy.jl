@@ -10,6 +10,38 @@ const SnappyOK = 0
 const SnappyInvalidInput = 1
 const SnappyBufferTooSmall = 2
 
+# High-level Interfaces
+
+function compress(input::Array{Uint8})
+    ilen = length(input)
+    maxlen = snappy_max_compressed_length(uint(ilen))
+    compressed = Array(Uint8, maxlen)
+    olen, st = snappy_compress(input, compressed)
+    if st != SnappyOK
+        error("compression failed")
+    end
+    resize!(compressed, olen)
+    compressed
+end
+
+function uncompress(input::Array{Uint8})
+    ilen = length(input)
+    explen, st = snappy_uncompressed_length(input)
+    if st != SnappyOK
+        error("faield to guess the length of the uncompressed data (the compressed data may be broken?)")
+    end
+    uncompressed = Array(Uint8, explen)
+    olen, st = snappy_uncompress(input, uncompressed)
+    if st != SnappyOK
+        error("failed to uncompress the data")
+    end
+    @assert explen == olen
+    resize!(uncompressed, olen)
+    uncompressed
+end
+
+# Low-level Interfaces
+
 function snappy_compress(input::Array{Uint8}, compressed::Array{Uint8})
     ilen = length(input)
     olen = Csize_t[length(compressed)]
@@ -48,36 +80,6 @@ end
 function snappy_validate_compressed_buffer(compressed::Array{Uint8})
     ilen = length(compressed)
     ccall((:snappy_validate_compressed_buffer, :libsnappy), Int, (Ptr{Uint8}, Csize_t), compressed, ilen)
-end
-
-# High-level Interfaces
-
-function compress(input::Array{Uint8})
-    ilen = length(input)
-    maxlen = snappy_max_compressed_length(uint(ilen))
-    compressed = Array(Uint8, maxlen)
-    olen, st = snappy_compress(input, compressed)
-    if st != SnappyOK
-        error("compression failed")
-    end
-    resize!(compressed, olen)
-    compressed
-end
-
-function uncompress(input::Array{Uint8})
-    ilen = length(input)
-    explen, st = snappy_uncompressed_length(input)
-    if st != SnappyOK
-        error("faield to guess the length of the uncompressed data (the compressed data may be broken?)")
-    end
-    uncompressed = Array(Uint8, explen)
-    olen, st = snappy_uncompress(input, uncompressed)
-    if st != SnappyOK
-        error("failed to uncompress the data")
-    end
-    @assert explen == olen
-    resize!(uncompressed, olen)
-    uncompressed
 end
 
 end # module
