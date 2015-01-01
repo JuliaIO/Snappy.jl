@@ -94,15 +94,23 @@ end
 # High-level Interfaces
 
 let
+    # QuickCheck-like property satisfaction tests (compress ○ uncompress = id)
     srand(2014)
+
+    # byte arrays
+    randbytes(n) = rand(Uint8, n)
+    for original in map(randbytes, 0:100:10000)
+        @test original |> compress |> uncompress == original
+    end
+
+    # strings
     for original in map(randstring, 0:100:1000)
         @test ASCIIString(uncompress(compress(original.data))) == original
     end
 end
 
-# Large data
-
 let
+    # Large data
     # 128MiB
     srand(2014)
     original = randstring(128 * 1024^2)
