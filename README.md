@@ -9,10 +9,10 @@
 
 The `Snappy` module exports only two functions:
 
-* `compress(input::Array{Uint8})`
-* `uncompress(input::Array{Uint8})`.
+* `compress(input::Array{Uint8}) -> Vector{Uint8}`
+* `uncompress(input::Array{Uint8}) -> Vector{Uint8}`.
 
-The names are self-explaantory and works as such (hence, always satisfies `uncompress(compress(input)) == input`).
+The names are self-explaantory and works as such (hence, always satisfies `uncompress(compress(input)) == input` for any `input`).
 
 
 ## Low-level Interfaces
