@@ -18,7 +18,7 @@ function compress(input::Vector{Uint8})
     compressed = Array(Uint8, maxlen)
     olen, st = snappy_compress(input, compressed)
     if st != SnappyOK
-        error("compression failed")
+        error("failed to compress the data")
     end
     resize!(compressed, olen)
     compressed
