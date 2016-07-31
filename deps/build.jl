@@ -10,7 +10,7 @@ snappy = library_dependency("libsnappy")
 #})
 
 provides(Sources, URI("https://github.com/google/snappy/releases/download/1.1.3/snappy-1.1.3.tar.gz"), snappy, unpacked_dir="snappy-1.1.3")
-provides(BuildProcess, Autotools(libtarget = Pkg.dir("Snappy") * "/deps/builds/libsnappy/.libs/libsnappy."*BinDeps.shlib_ext), snappy, os=:Unix)
+provides(BuildProcess, Autotools(libtarget = dirname(@__FILE__) * "/builds/libsnappy/.libs/libsnappy."*BinDeps.shlib_ext), snappy, os=:Unix)
 
 @osx_only begin
     using Homebrew
