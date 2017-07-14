@@ -20,7 +20,7 @@ const SnappyBufferTooSmall = 2
 function compress(input::Vector{UInt8})
     ilen = length(input)
     maxlen = snappy_max_compressed_length(@compat(UInt(ilen)))
-    compressed = Array(UInt8, maxlen)
+    compressed = Array{UInt8}(maxlen)
     olen, st = snappy_compress(input, compressed)
     if st != SnappyOK
         error("failed to compress the data")
@@ -35,7 +35,7 @@ function uncompress(input::Array{UInt8})
     if st != SnappyOK
         error("faield to guess the length of the uncompressed data (the compressed data may be broken?)")
     end
-    uncompressed = Array(UInt8, explen)
+    uncompressed = Array{UInt8}(explen)
     olen, st = snappy_uncompress(input, uncompressed)
     if st != SnappyOK
         error("failed to uncompress the data")
