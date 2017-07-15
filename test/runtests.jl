@@ -1,7 +1,5 @@
 using Snappy
 using Base.Test
-using Compat
-
 
 @testset "Low-level Interfaces" begin
     SnappyOK = Snappy.SnappyOK
@@ -63,7 +61,7 @@ using Compat
 
     # Estimate compressed size
     for original in originals()
-        maxlen = Snappy.snappy_max_compressed_length(@compat(UInt(length(original))))
+        maxlen = Snappy.snappy_max_compressed_length(UInt(length(original)))
         compressed = Array{UInt8}(100)
         olen, st = Snappy.snappy_compress(Vector{UInt8}(original), compressed)
         @test st == SnappyOK
