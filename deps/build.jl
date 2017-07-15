@@ -1,5 +1,4 @@
 using BinDeps
-using Compat
 @BinDeps.setup
 
 snappy = library_dependency("libsnappy")
@@ -17,4 +16,4 @@ provides(BuildProcess, Autotools(libtarget = dirname(@__FILE__) * "/builds/libsn
     provides(Homebrew.HB, "snappy", snappy, os=:Darwin)
 end
 
-@compat @BinDeps.install Dict(:libsnappy => :libsnappy)
+@BinDeps.install Dict(:libsnappy => :libsnappy)
