@@ -8,7 +8,7 @@ snappy = library_dependency("libsnappy")
 #    "libsnappy-dev" => snappy
 #})
 
-version = "1.1.6"
+version = "1.1.4"
 provides(Sources, URI("https://github.com/google/snappy/releases/download/$(version)/snappy-$(version).tar.gz"), snappy, unpacked_dir="snappy-$(version)")
 provides(BuildProcess, Autotools(libtarget=dirname(@__FILE__) * "/builds/libsnappy/.libs/libsnappy." * Libdl.dlext), snappy, os=:Unix)
 
