@@ -17,18 +17,18 @@ let
     buffer_size = 100
     for original in originals()
         # compress
-        compressed = Array(UInt8, buffer_size)
-        olen, st = Snappy.snappy_compress(original.data, compressed)
+        compressed = Array{UInt8}(buffer_size)
+        olen, st = Snappy.snappy_compress(Vector{UInt8}(original), compressed)
         @test st == SnappyOK
         resize!(compressed, olen)
 
         # uncompress
-        uncompressed = Array(UInt8, buffer_size)
+        uncompressed = Array{UInt8}(buffer_size)
         olen, st = Snappy.snappy_uncompress(compressed, uncompressed)
         @test st == SnappyOK
         resize!(uncompressed, olen)
 
-        restored = ASCIIString(uncompressed)
+        restored = String(uncompressed)
         @test original == restored
     end
 end
@@ -38,18 +38,18 @@ let
     original = "orig"
 
     # prepare too small buffer to compress
-    compressed = Array(UInt8, 1)
-    _, st = Snappy.snappy_compress(original.data, compressed)
+    compressed = Array{UInt8}(1)
+    _, st = Snappy.snappy_compress(Vector{UInt8}(original), compressed)
     @test st == SnappyBufferTooSmall
 
     # now enough buffer size
-    compressed = Array(UInt8, 100)
-    olen, st = Snappy.snappy_compress(original.data, compressed)
+    compressed = Array{UInt8}(100)
+    olen, st = Snappy.snappy_compress(Vector{UInt8}(original), compressed)
     @test st == SnappyOK
     resize!(compressed, olen)
 
     # again the prepared buffer is too small to uncompress
-    uncompressed = Array(UInt8, 1)
+    uncompressed = Array{UInt8}(1)
     olen, st = Snappy.snappy_uncompress(compressed, uncompressed)
     @test st == SnappyBufferTooSmall
 end
@@ -57,8 +57,8 @@ end
 let
     # Break compressed data and detect it
     original = "orig"
-    compressed = Array(UInt8, 100)
-    olen, st = Snappy.snappy_compress(original.data, compressed)
+    compressed = Array{UInt8}(100)
+    olen, st = Snappy.snappy_compress(Vector{UInt8}(original), compressed)
     @test st == SnappyOK
     resize!(compressed, olen)
     @test Snappy.snappy_validate_compressed_buffer(compressed) == SnappyOK
@@ -71,8 +71,8 @@ let
     # Estimate compressed size
     for original in originals()
         maxlen = Snappy.snappy_max_compressed_length(@compat(UInt(length(original))))
-        compressed = Array(UInt8, 100)
-        olen, st = Snappy.snappy_compress(original.data, compressed)
+        compressed = Array{UInt8}(100)
+        olen, st = Snappy.snappy_compress(Vector{UInt8}(original), compressed)
         @test st == SnappyOK
         #@show Int(olen), Int(maxlen)
         @test olen <= maxlen
@@ -82,8 +82,8 @@ end
 let
     # Estimate uncompressed size
     for original in originals()
-        compressed = Array(UInt8, 100)
-        olen, st = Snappy.snappy_compress(original.data, compressed)
+        compressed = Array{UInt8}(100)
+        olen, st = Snappy.snappy_compress(Vector{UInt8}(original), compressed)
         @test st == SnappyOK
         resize!(compressed, olen)
         olen, st = Snappy.snappy_uncompressed_length(compressed)
@@ -106,7 +106,7 @@ let
 
     # strings
     for original in map(randstring, 0:100:1000)
-        @test ASCIIString(uncompress(compress(original.data))) == original
+        @test String(uncompress(compress(Vector{UInt8}(original)))) == original
     end
 end
 
@@ -115,5 +115,6 @@ let
     # 128MiB
     srand(2014)
     original = randstring(128 * 1024^2)
-    @test uncompress(compress(original.data)) == original.data
+    original_bytes = Vector{UInt8}(original)
+    @test uncompress(compress(original_bytes)) == original_bytes
 end
