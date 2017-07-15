@@ -8,8 +8,9 @@ snappy = library_dependency("libsnappy")
 #    "libsnappy-dev" => snappy
 #})
 
-provides(Sources, URI("https://github.com/google/snappy/releases/download/1.1.3/snappy-1.1.3.tar.gz"), snappy, unpacked_dir="snappy-1.1.3")
-provides(BuildProcess, Autotools(libtarget = dirname(@__FILE__) * "/builds/libsnappy/.libs/libsnappy."*Libdl.dlext), snappy, os=:Unix)
+version = "1.1.6"
+provides(Sources, URI("https://github.com/google/snappy/releases/download/$(version)/snappy-$(version).tar.gz"), snappy, unpacked_dir="snappy-$(version)")
+provides(BuildProcess, Autotools(libtarget=dirname(@__FILE__) * "/builds/libsnappy/.libs/libsnappy." * Libdl.dlext), snappy, os=:Unix)
 
 @static if is_apple()
     using Homebrew
