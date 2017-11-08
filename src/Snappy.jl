@@ -2,11 +2,12 @@ __precompile__()
 
 module Snappy
 
-if isfile(joinpath(dirname(dirname(@__FILE__)),"deps","deps.jl"))
-    include("../deps/deps.jl")
-else
-    error("Snappy not properly installed. Please run Pkg.build(\"Snappy\")")
+# Load libnettle from our deps.jl
+const depsjl_path = joinpath(dirname(@__FILE__), "..", "deps", "deps.jl")
+if !isfile(depsjl_path)
+    error("Nettle not installed properly, run Pkg.build(\"Nettle\"), restart Julia and try again")
 end
+include(depsjl_path)
 
 export compress, uncompress
 
@@ -14,6 +15,10 @@ export compress, uncompress
 const SnappyOK             = Cint(0)
 const SnappyInvalidInput   = Cint(1)
 const SnappyBufferTooSmall = Cint(2)
+
+function __init__()
+    check_deps()
+end
 
 # High-level Interfaces
 
