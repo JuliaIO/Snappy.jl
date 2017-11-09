@@ -2,10 +2,10 @@ __precompile__()
 
 module Snappy
 
-# Load libnettle from our deps.jl
+# Load libsnappy from our deps.jl
 const depsjl_path = joinpath(dirname(@__FILE__), "..", "deps", "deps.jl")
 if !isfile(depsjl_path)
-    error("Nettle not installed properly, run Pkg.build(\"Nettle\"), restart Julia and try again")
+    error("Snappy not installed properly, run Pkg.build(\"Snappy\"), restart Julia and try again")
 end
 include(depsjl_path)
 
