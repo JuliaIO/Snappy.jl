@@ -10,14 +10,14 @@ const bin_prefix="https://github.com/davidanthoff/SnappyBuilder/releases/downloa
 
 # TODO Update hash values, only the Windows x64 hash is correct right now
 const download_info = Dict(
-    Linux(:i686) =>     ("$bin_prefix/SnappyBuilder.i686-linux-gnu.tar.gz", "f7507f06762dea5d4007ae2a0fb672093e1a6007cd16de6cdfe745c6474bc95b"),
-    Linux(:x86_64) =>   ("$bin_prefix/SnappyBuilder.x86_64-linux-gnu.tar.gz", "767497ed970b00562e79359397f76d7bfbdb8fe7b730c0cfcdd36e686ec5d2fc"),
-    Linux(:aarch64) =>  ("$bin_prefix/SnappyBuilder.aarch64-linux-gnu.tar.gz", "974867ab140f92fd3dca72935153d7759e46708f6492216376fff46024b32458"),
-    Linux(:armv7l) =>   ("$bin_prefix/SnappyBuilder.arm-linux-gnueabihf.tar.gz", "f7325872f982a71c3f7bc4df324b121f3b4ceeeeaf9129c02e040dc2e7a0e0d2"),
-    Linux(:ppc64le) =>  ("$bin_prefix/SnappyBuilder.powerpc64le-linux-gnu.tar.gz", "59a1d81f862abd61b41ae9a4e6aad9d8da8bc8f14483575120e635b43d5f0201"),
-    MacOS() =>          ("$bin_prefix/SnappyBuilder.x86_64-apple-darwin14.tar.gz", "9d33952c433d4ac2f0ab17d7fc69db38651e751e67c6d6e6b2424409bdbf7388"),
-    Windows(:i686) =>   ("$bin_prefix/SnappyBuilder.i686-w64-mingw32.tar.gz", "d587f8979b42ea6f6baa602e58e4796744208d242676a28099efd35038a51c8e"),
-    Windows(:x86_64) => ("$bin_prefix/SnappyBuilder.x86_64-w64-mingw32.tar.gz", "e80de0cf571fadc8592a7ed9973ca89fe5efbe07a099513b125ae765e8a5c3f8"),
+    Linux(:i686) =>     ("$bin_prefix/SnappyBuilder.i686-linux-gnu.tar.gz", "e3b13b4b686157ff687a3c0685b77ceeb105e6f8666181b57aebbd775d21c0cf"),
+    Linux(:x86_64) =>   ("$bin_prefix/SnappyBuilder.x86_64-linux-gnu.tar.gz", "727b343115760caff69cdcd10f8fbf63d4abd452b923e712553fb795ca4067ed"),
+    Linux(:aarch64) =>  ("$bin_prefix/SnappyBuilder.aarch64-linux-gnu.tar.gz", "a05ac433b8ab84126017354e489cf3f4fd77dbfa4a2b328ad383c833098de3ef"),
+    Linux(:armv7l) =>   ("$bin_prefix/SnappyBuilder.arm-linux-gnueabihf.tar.gz", "a22e0c2a7da49b3ed74d72946f89a7c5e69fc103d2e2ac7eae204b9d4ead158d"),
+    Linux(:ppc64le) =>  ("$bin_prefix/SnappyBuilder.powerpc64le-linux-gnu.tar.gz", "d54a56fbc29b4f3e46f786b248f6de108fe24357e3701e0522503a397dd686ed"),
+    MacOS() =>          ("$bin_prefix/SnappyBuilder.x86_64-apple-darwin14.tar.gz", "2245ba24ef2653e1f174f75ce5e868e505a469304db7b30022b2cf7fe51e267f"),
+    Windows(:i686) =>   ("$bin_prefix/SnappyBuilder.i686-w64-mingw32.tar.gz", "5f766a018c77aa2136a9d3075027b257d1ab6c62cbcb4610bd8bc59085821b20"),
+    Windows(:x86_64) => ("$bin_prefix/SnappyBuilder.x86_64-w64-mingw32.tar.gz", "615685cc76e0c985acef96185c7d42637e70a8ef79099a1b99a6d275a177cf3d"),
 )
 
 if platform in keys(download_info)
