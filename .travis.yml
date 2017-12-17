@@ -9,7 +9,7 @@ julia:
 notifications:
   email: false
 # uncomment the following lines to override the default test script
-script:
- - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
- - julia -e 'Pkg.add("BinaryProvider"); Pkg.checkout("BinaryProvider")'
- - julia -e 'Pkg.clone(pwd()); Pkg.build("Snappy"); Pkg.test("Snappy"; coverage=true)'
+# script:
+#  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
+#  - julia -e 'Pkg.add("BinaryProvider"); Pkg.checkout("BinaryProvider")'
+#  - julia -e 'Pkg.clone(pwd()); Pkg.build("Snappy"); Pkg.test("Snappy"; coverage=true)'
