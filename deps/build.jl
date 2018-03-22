@@ -2,10 +2,7 @@ using BinaryProvider
 
 # This is where all binaries will get installed
 const prefix = Prefix(!isempty(ARGS) ? ARGS[1] : joinpath(@__DIR__,"usr"))
-
-libsnappy = LibraryProduct(prefix, "libsnappy")
-
-# Assign products to `products`:
+libsnappy = LibraryProduct(prefix, "libsnappy", :libsnappy)
 products = [libsnappy]
 
 # Download binaries from hosted location
@@ -23,18 +20,19 @@ download_info = Dict(
     Windows(:x86_64) => ("$bin_prefix/SnappyBuilder.x86_64-w64-mingw32.tar.gz", "1c13a31c23225b812ee477dffa1fc77d6f501c0a3b65a9920edf5aa4a76f4475"),
 )
 
-if platform_key() in keys(download_info)
-    # First, check to see if we're all satisfied
-    if any(!satisfied(p; verbose=true) for p in products)
+# First, check to see if we're all satisfied
+if any(!satisfied(p; verbose=true) for p in products)
+    if haskey(download_info, platform_key())
         # Download and install binaries
         url, tarball_hash = download_info[platform_key()]
         install(url, tarball_hash; prefix=prefix, force=true, verbose=true)
+    else
+        # If we don't have a BinaryProvider-compatible .tar.gz to download, complain.
+        # Alternatively, you could attempt to install from a separate provider,
+        # build from source or something more even more ambitious here.
+        error("Your platform $(triplet(platform_key())) is not supported by this package!")
     end
-
-    # Finally, write out a deps.jl file that will contain mappings for each
-    # named product here: (there will be a "libfoo" variable and a "fooifier"
-    # variable, etc...)
-    @write_deps_file libsnappy
-else
-    error("Your platform $(Sys.MACHINE) is not supported by this package!")
 end
+
+# Write out a deps.jl file that will contain mappings for our products
+write_deps_file(joinpath(@__DIR__, "deps.jl"), products)
