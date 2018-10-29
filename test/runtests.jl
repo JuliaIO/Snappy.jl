@@ -1,5 +1,6 @@
 using Snappy
-using Base.Test
+using Random
+using Test
 
 @testset "Low-level Interfaces" begin
     SnappyOK = Snappy.SnappyOK
@@ -14,13 +15,13 @@ using Base.Test
     buffer_size = 100
     for original in originals()
         # compress
-        compressed = Array{UInt8}(buffer_size)
+        compressed = Array{UInt8}(undef, buffer_size)
         olen, st = Snappy.snappy_compress(Vector{UInt8}(original), compressed)
         @test st == SnappyOK
         resize!(compressed, olen)
 
         # uncompress
-        uncompressed = Array{UInt8}(buffer_size)
+        uncompressed = Array{UInt8}(undef, buffer_size)
         olen, st = Snappy.snappy_uncompress(compressed, uncompressed)
         @test st == SnappyOK
         resize!(uncompressed, olen)
@@ -33,24 +34,24 @@ using Base.Test
     original = "orig"
 
     # prepare too small buffer to compress
-    compressed = Array{UInt8}(1)
+    compressed = Array{UInt8}(undef, 1)
     _, st = Snappy.snappy_compress(Vector{UInt8}(original), compressed)
     @test st == SnappyBufferTooSmall
 
     # now enough buffer size
-    compressed = Array{UInt8}(100)
+    compressed = Array{UInt8}(undef, 100)
     olen, st = Snappy.snappy_compress(Vector{UInt8}(original), compressed)
     @test st == SnappyOK
     resize!(compressed, olen)
 
     # again the prepared buffer is too small to uncompress
-    uncompressed = Array{UInt8}(1)
+    uncompressed = Array{UInt8}(undef, 1)
     olen, st = Snappy.snappy_uncompress(compressed, uncompressed)
     @test st == SnappyBufferTooSmall
 
     # Break compressed data and detect it
     original = "orig"
-    compressed = Array{UInt8}(100)
+    compressed = Array{UInt8}(undef, 100)
     olen, st = Snappy.snappy_compress(Vector{UInt8}(original), compressed)
     @test st == SnappyOK
     resize!(compressed, olen)
@@ -62,7 +63,7 @@ using Base.Test
     # Estimate compressed size
     for original in originals()
         maxlen = Snappy.snappy_max_compressed_length(UInt(length(original)))
-        compressed = Array{UInt8}(100)
+        compressed = Array{UInt8}(undef, 100)
         olen, st = Snappy.snappy_compress(Vector{UInt8}(original), compressed)
         @test st == SnappyOK
         #@show Int(olen), Int(maxlen)
@@ -71,7 +72,7 @@ using Base.Test
 
     # Estimate uncompressed size
     for original in originals()
-        compressed = Array{UInt8}(100)
+        compressed = Array{UInt8}(undef, 100)
         olen, st = Snappy.snappy_compress(Vector{UInt8}(original), compressed)
         @test st == SnappyOK
         resize!(compressed, olen)
@@ -83,7 +84,7 @@ end
 
 @testset "High-level Interfaces" begin
     # QuickCheck-like property satisfaction tests (compress ○ uncompress = id)
-    srand(2014)
+    Random.seed!(2014)
 
     # byte arrays
     randbytes(n) = rand(UInt8, n)
@@ -98,7 +99,7 @@ end
 
     # Large data
     # 128MiB
-    srand(2014)
+    Random.seed!(2014)
     original = randstring(128 * 1024^2)
     original_bytes = Vector{UInt8}(original)
     @test uncompress(compress(original_bytes)) == original_bytes
