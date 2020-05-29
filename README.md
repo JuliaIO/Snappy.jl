@@ -17,7 +17,7 @@ These functions are self-explanatory and works as such (hence, always satisfies 
 
 ## Low-level Interfaces
 
-If you digg into the module, you will find the following lower-level functions:
+If you dig into the module, you will find the following lower-level functions:
 
 * `snappy_compress(input::Vector{UInt8}, compressed::Vector{UInt8}) -> (length, status)`
 * `snappy_uncompress(compressed::Vector{UInt8}, uncompressed::Vector{UInt8}) -> (length, status)`
