@@ -76,6 +76,8 @@ function snappy_uncompress(compressed::Vector{UInt8}, uncompressed::Vector{UInt8
     olen[], status
 end
 
+snappy_uncompress!(uncompressed, compressed) = snappy_uncompress(compressed, uncompressed)
+
 function snappy_max_compressed_length(source_length::UInt)
     ccall((:snappy_max_compressed_length, libsnappy), Csize_t, (Csize_t,), source_length)
 end
