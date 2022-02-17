@@ -1,0 +1,8 @@
+name = "Snappy"
+uuid = "52e1788d-b0ba-47f3-84a2-d527a087cd9e"
+license = "MIT"
+authors = ["Kenta Sato <bicycle1885@gmail.com>"]
+version = "0.3.0"
+
+[deps]
+snappy_jll = "fe1e1685-f7be-5f59-ac9f-4ca204017dfd"
