@@ -1,0 +1,5 @@
+[general]
+library_name = "libsnappy"
+output_file_path = "../src/LibSnappy.jl"
+module_name = "LibSnappy"
+jll_pkg_name = "snappy_jll"

@@ -1,7 +1,6 @@
 module Snappy
 
-# Load libsnappy from our deps.jl
-using snappy_jll
+include("LibSnappy.jl")
 
 export compress, uncompress
 
@@ -10,19 +9,27 @@ const SnappyOK             = Cint(0)
 const SnappyInvalidInput   = Cint(1)
 const SnappyBufferTooSmall = Cint(2)
 
-# High-level Interfaces
+function statuscheck(st, op::AbstractString="compress")
+    st == LibSnappy.SNAPPY_OK && return nothing
+    error("snappy failed to $op: " * if st == LibSnappy.SNAPPY_INVALID_INPUT
+        "invalid input"
+    elseif st == LibSnappy.SNAPPY_BUFFER_TOO_SMALL
+        "buffer too small"
+    else
+        "unknown error code ($st)"
+    end)
+end
 
-function compress(input::Vector{UInt8})
+function compress(input::Vector{UInt8}; validate::Bool=false)
     ilen = length(input)
     maxlen = snappy_max_compressed_length(UInt(ilen))
     compressed = Array{UInt8}(undef, maxlen)
     olen, st = snappy_compress(input, compressed)
-    if st != SnappyOK
-        error("failed to compress the data")
-    end
+    statuscheck(st)
     resize!(compressed, olen)
     compressed
 end
+compress(input::AbstractVector{UInt8}) = compress(convert(Vector{UInt8}, input))
 
 function uncompress(input::Array{UInt8})
     ilen = length(input)
@@ -32,54 +39,41 @@ function uncompress(input::Array{UInt8})
     end
     uncompressed = Array{UInt8}(undef, explen)
     olen, st = snappy_uncompress(input, uncompressed)
-    if st != SnappyOK
-        error("failed to uncompress the data")
+    statuscheck(st, "uncompress")
+    if explen ≠ olen
+        error("snappy expected uncompressed length $explen but got $olen")
     end
-    @assert explen == olen
     resize!(uncompressed, olen)
     uncompressed
 end
+uncompress(input::AbstractVector{UInt8}) = uncompress(convert(Vector{UInt8}, input))
 
 # Low-level Interfaces
 
 function snappy_compress(input::Vector{UInt8}, compressed::Vector{UInt8})
-    ilen = length(input)
     olen = Ref{Csize_t}(length(compressed))
-    status = ccall(
-        (:snappy_compress, libsnappy),
-        Cint,
-        (Ptr{UInt8}, Csize_t, Ptr{UInt8}, Ref{Csize_t}),
-        input, ilen, compressed, olen
-    )
-    olen[], status
+    st = LibSnappy.snappy_compress(input, length(input), compressed, olen)
+    olen[], Int(st)
 end
 
 function snappy_uncompress(compressed::Vector{UInt8}, uncompressed::Vector{UInt8})
-    ilen = length(compressed)
     olen = Ref{Csize_t}(length(uncompressed))
-    status = ccall(
-        (:snappy_uncompress, libsnappy),
-        Cint,
-        (Ptr{UInt8}, Csize_t, Ptr{UInt8}, Ref{Csize_t}),
-        compressed, ilen, uncompressed, olen
-    )
-    olen[], status
+    st = LibSnappy.snappy_uncompress(compressed, length(compressed), uncompressed, olen)
+    olen[], st
 end
 
-function snappy_max_compressed_length(source_length::UInt)
-    ccall((:snappy_max_compressed_length, libsnappy), Csize_t, (Csize_t,), source_length)
+function snappy_max_compressed_length(source_length::Integer)
+    LibSnappy.snappy_max_compressed_length(UInt(source_length))
 end
 
 function snappy_uncompressed_length(compressed::Vector{UInt8})
-    len = length(compressed)
     result = Ref{Csize_t}(0)
-    status = ccall((:snappy_uncompressed_length, libsnappy), Cint, (Ptr{UInt8}, Csize_t, Ref{Csize_t}), compressed, len, result)
-    result[], status
+    st = LibSnappy.snappy_uncompressed_length(compressed, length(compressed), result)
+    result[], st
 end
 
 function snappy_validate_compressed_buffer(compressed::Vector{UInt8})
-    ilen = length(compressed)
-    ccall((:snappy_validate_compressed_buffer, libsnappy), Cint, (Ptr{UInt8}, Csize_t), compressed, ilen)
+    LibSnappy.snappy_validate_compressed_buffer(compressed, length(compressed))
 end
 
 end # module

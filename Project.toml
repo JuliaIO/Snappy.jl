@@ -4,6 +4,7 @@ authors = ["Kenta Sato <bicycle1885@gmail.com>"]
 version = "0.4.0"
 
 [deps]
+CEnum = "fa961155-64e5-5f13-b03f-caf6b980ea82"
 snappy_jll = "fe1e1685-f7be-5f59-ac9f-4ca204017dfd"
 
 [compat]
