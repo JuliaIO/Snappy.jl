@@ -1,8 +1,8 @@
 # Snappy - A fast compressor/decompressor
 
-[![Build Status](https://travis-ci.org/bicycle1885/Snappy.jl.svg?branch=master)](https://travis-ci.org/bicycle1885/Snappy.jl)
+[![Build Status](https://travis-ci.org/JuliaIO/Snappy.jl.svg?branch=master)](https://travis-ci.org/JuliaIO/Snappy.jl)
 
-[Snappy.jl](https://github.com/bicycle1885/Snappy.jl) is a Julia wrapper for the [snappy](https://code.google.com/p/snappy/) library - a compression/decompression library focusing on speed.
+[Snappy.jl](https://github.com/JuliaIO/Snappy.jl) is a Julia wrapper for the [snappy](https://code.google.com/p/snappy/) library - a compression/decompression library focusing on speed.
 
 
 ## High-level Interfaces
